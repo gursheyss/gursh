@@ -1,6 +1,18 @@
 #!/bin/bash
 
-if [ "$1" = "download" ] && [ "$2" = "kick" ] && [ -n "$3" ] && [ -n "$4" ]; then
+if [ "$1" = "create" ] && [ -n "$2" ]; then
+    REPO_NAME=$2
+    REPO_PATH=~/Code/$REPO_NAME
+
+    if [ -d "$REPO_PATH" ]; then
+        echo "Repo already exists at $REPO_PATH"
+    else
+        mkdir -p $REPO_PATH
+        cd $REPO_PATH
+        git init
+        code .
+    fi
+elif [ "$1" = "download" ] && [ "$2" = "kick" ] && [ -n "$3" ] && [ -n "$4" ]; then
     URL=$3
     DEST_PATH=$4
     ID=$(basename $URL)
@@ -21,5 +33,8 @@ if [ "$1" = "download" ] && [ "$2" = "kick" ] && [ -n "$3" ] && [ -n "$4" ]; the
 
     yt-dlp -o "$DEST_PATH/$ID" $SOURCE_URL
 else
-    echo "Usage: gursh download kick <URL> <DEST_PATH>"
+    echo "Usage: gursh <command> <args>"
+    echo "Commands:"
+    echo "  create <repo_name> - Create a new repo in ~/Code/<repo_name> and open it in VS Code"
+    echo "  download kick <URL> <DEST_PATH> - Download a video from kick.com"
 fi
